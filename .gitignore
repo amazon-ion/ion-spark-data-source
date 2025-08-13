@@ -1,0 +1,13 @@
+*.iml
+.DS_Store
+.attach_pid*
+.idea
+build
+/.bsp
+project/project
+project/target
+target
+.jvmopts
+.bloop
+.metals
+.gradle
