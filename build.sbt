@@ -5,6 +5,8 @@ val sparkMajorVersion = sparkVersion.substring(0, sparkVersion.lastIndexOf("."))
 
 organization := "com.amazon.ion"
 name := s"ion-spark-data-source-$sparkMajorVersion"
+// force the artifact name in maven to keep the . in Spark version rather than substitute it with a -
+moduleName := name.value
 versionScheme := Some("semver-spec")
 
 scalaVersion := "2.12.17"
