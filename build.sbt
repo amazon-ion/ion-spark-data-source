@@ -63,6 +63,7 @@ addCommandAlias("releaseLocal", releaseTasks("publishLocal"))
 
 publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
+pgpSigningKey := sys.env.get("PGP_SIGNING_KEY_ID")
 
 def releaseTasks(publishTask: String) = {
   val tasks = Seq(
