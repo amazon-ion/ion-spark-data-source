@@ -8,6 +8,9 @@ jobs:
   # Needed Environment Variables
   #    - PGP_PASSPHRASE = password for PGP private key
   #    - PGP_SECRET_ARMORED = PGP private key in ascii armored format.
+  #    - PGP_SIGNING_KEY_iD = The ID of the key to use for signing. This is configured in build.sbt in order
+  #                           not rely on the key being the default key, which is usually not the case when
+  #                           doing non-CI builds.
   #    - SONATYPE_TOKEN = JSON encoding of sonotype token user and password.
   publish-release:
     runs-on: "codebuild-ion-spark-data-source-${{ github.run_id }}-${{ github.run_attempt }}"
