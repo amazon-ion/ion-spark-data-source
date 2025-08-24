@@ -5,6 +5,10 @@ on:
 permissions:
   contents: read
 jobs:
+  # Needed Environment Variables
+  #    - PGP_PASSPHRASE = password for PGP private key
+  #    - PGP_SECRET_ARMORED = PGP private key in ascii armored format.
+  #    - SONATYPE_TOKEN = JSON encoding of sonotype token user and password.
   publish-release:
     runs-on: "codebuild-ion-spark-data-source-${{ github.run_id }}-${{ github.run_attempt }}"
     steps:
@@ -19,5 +23,17 @@ jobs:
           cache: sbt
       - name: Setup sbt launcher
         uses: sbt/setup-sbt@v1
+        # Some of the secrets we have are not in the format that sbt-ci-release wants them in.
+        # So this step re-formats those values and sets up the environment for the Publish step.
+      - name: Setup Environment
+        run: |
+          TOKEN_USER="$(echo "$SONATYPE_TOKEN" | jq -r '. | keys[0]')"
+          TOKEN_SECRET="$(echo "$SONATYPE_TOKEN" | jq -r ". | .$TOKEN_USER")"
+          PGPKEY_BASE64="$(echo "$PGP_SECRET_ARMORED" | base64)"
+          {
+            echo "SONATYPE_USERNAME=\"$TOKEN_USER\"";
+            echo "SONATYPE_PASSWORD=\"$TOKEN_SECRET\"";
+            echo "PGP_SECRET=\"$PGPKEY_BASE64\"";
+          } >> "$GITHUB_ENV"
       - name: Publish
         run: sbt ci-release
