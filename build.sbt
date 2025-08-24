@@ -7,6 +7,7 @@ organization := "com.amazon.ion"
 organizationHomepage := Some(url("https://amazon-ion.github.io/ion-docs/"))
 name := s"ion-spark-data-source-$sparkMajorVersion"
 homepage := Some(url("https://github.com/amazon-ion/ion-spark-data-source"))
+licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 developers := List(
   Developer(
     "ion-team",
@@ -64,6 +65,13 @@ addCommandAlias("releaseLocal", releaseTasks("publishLocal"))
 publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
 pgpSigningKey := sys.env.get("PGP_SIGNING_KEY_ID")
+
+// NOTE: CI release escape hatch: If a release needs to be manually pushed to maven central,
+// specify the options below. Ensure the version is correct, and run `sbt ci-release` locally
+// with the same environment variables needed for the CI build. This will circumvent any 'SNAPSHOT'
+// detection, and issues with the sbt-ci-release plugin not pushing releases outside of a CI env.
+// isSnapshot := false
+// version := "1.0.0"
 
 def releaseTasks(publishTask: String) = {
   val tasks = Seq(
