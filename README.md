@@ -129,7 +129,7 @@ This project uses [SBT (Scala Build Tool)](https://www.scala-sbt.org/) for build
 
 ### Prerequisites
 
-- **Java 8 or higher** (Java 17 or higher is recommended)
+- **Java 17** (required — Java 21+ is not supported due to removed `Subject.getSubject()` API)
 - **SBT** (will use version 1.10.0 as specified in `project/build.properties`)
 
 ### Building the Project
@@ -184,6 +184,7 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 
 # Then run SBT commands as normal
 sbt compile
+```
 ```
 
 ### IDE Integration
