@@ -1414,8 +1414,8 @@ class IonConverterSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         val exception = the[IonConversionException] thrownBy {
           converter.parse(bigIntData)
         }
-        exception.getMessage shouldEqual "Error parsing field [column_a] of type [INT] into schema type [DecimalType(5,1)]. " +
-          "Error: [DECIMAL_PRECISION_EXCEEDS_MAX_PRECISION] Decimal precision 14 exceeds max precision 5."
+        exception.getMessage should include("Error parsing field [column_a] of type [INT] into schema type [DecimalType(5,1)].")
+        exception.getMessage should include("NUMERIC_VALUE_OUT_OF_RANGE")
       }
 
       "should throw for IonType.FLOAT when the data precision/scale exceeds the schema" in {
@@ -1425,8 +1425,8 @@ class IonConverterSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         val exception = the[IonConversionException] thrownBy {
           converter.parse(largeFloatData)
         }
-        exception.getMessage shouldEqual "Error parsing field [column_a] of type [FLOAT] into schema type [DecimalType(5,1)]. " +
-          "Error: [DECIMAL_PRECISION_EXCEEDS_MAX_PRECISION] Decimal precision 6 exceeds max precision 5."
+        exception.getMessage should include("Error parsing field [column_a] of type [FLOAT] into schema type [DecimalType(5,1)].")
+        exception.getMessage should include("NUMERIC_VALUE_OUT_OF_RANGE")
       }
 
       "should throw for IonType.DECIMAL when the data precision/scale exceeds the schema" in {
@@ -1436,8 +1436,8 @@ class IonConverterSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         val exception = the[IonConversionException] thrownBy {
           converter.parse(largeDecimalData)
         }
-        exception.getMessage shouldEqual "Error parsing field [column_a] of type [DECIMAL] into schema type [DecimalType(5,1)]. " +
-          "Error: [DECIMAL_PRECISION_EXCEEDS_MAX_PRECISION] Decimal precision 16 exceeds max precision 5."
+        exception.getMessage should include("Error parsing field [column_a] of type [DECIMAL] into schema type [DecimalType(5,1)].")
+        exception.getMessage should include("NUMERIC_VALUE_OUT_OF_RANGE")
       }
 
       "should throw for IonType.STRING containing a number with precision/scale that exceeds the schema" in {
@@ -1447,8 +1447,8 @@ class IonConverterSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         val exception = the[IonConversionException] thrownBy {
           converter.parse(stringDataNumberLargeFloat)
         }
-        exception.getMessage shouldEqual "Error parsing field [column_a] of type [STRING] into schema type [DecimalType(5,1)]. " +
-          "Error: [DECIMAL_PRECISION_EXCEEDS_MAX_PRECISION] Decimal precision 6 exceeds max precision 5."
+        exception.getMessage should include("Error parsing field [column_a] of type [STRING] into schema type [DecimalType(5,1)].")
+        exception.getMessage should include("NUMERIC_VALUE_OUT_OF_RANGE")
       }
 
       "should convert IonType.FLOAT with 64-bit precision (natural number) to DecimalType(38,0) without precision loss" in {

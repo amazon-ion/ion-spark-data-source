@@ -81,7 +81,7 @@ class IonDataSourceSpec extends AnyFlatSpec {
 
     data += baos.toByteArray
 
-    val inputDF = spark.sparkContext.makeRDD(data).toDF("data")
+    val inputDF = spark.sparkContext.makeRDD(data.toSeq).toDF("data")
 
     // Register the datasource so that we can use short-name "ion"
     inputDF.write
@@ -129,7 +129,7 @@ class IonDataSourceSpec extends AnyFlatSpec {
 
     data += baos.toByteArray
 
-    val inputDF = spark.sparkContext.makeRDD(data).toDF("data")
+    val inputDF = spark.sparkContext.makeRDD(data.toSeq).toDF("data")
     spark.conf.set(IonOptions.OUTPUT_BUFFER_SIZE, value = 1)
 
     // Register the datasource so that we can use short-name "ion"

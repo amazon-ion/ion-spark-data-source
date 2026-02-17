@@ -3,7 +3,8 @@
 
 package com.amazon.spark.ion.parser
 
-import org.apache.spark.sql.Column
+import org.apache.spark.sql.{Column, IonColumnHelper}
+import org.apache.spark.sql.classic.ColumnConversions
 import org.apache.spark.sql.types.StructType
 
 object IonFunctions extends Serializable {
@@ -27,7 +28,8 @@ object IonFunctions extends Serializable {
     * @return
     */
   def to_ion(cols: Seq[Column], schema: StructType, options: Map[String, String] = Map.empty): Column = {
-    new Column(CreateIonStruct(cols.map(_.expr), schema, options))
+    val expressions = cols.map(c => ColumnConversions.expression(c))
+    IonColumnHelper.fromExpression(CreateIonStruct(expressions, schema, options))
   }
 
   /**
@@ -41,7 +43,8 @@ object IonFunctions extends Serializable {
   }
 
   private def from_any_ion(c: Column, schema: StructType, options: Map[String, String] = Map.empty): Column = {
-    new Column(IonToStructs(schema, c.expr, options))
+    val expr = ColumnConversions.expression(c)
+    IonColumnHelper.fromExpression(IonToStructs(schema, expr, options))
   }
 
 }
