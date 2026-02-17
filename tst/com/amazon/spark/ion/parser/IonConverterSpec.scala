@@ -1414,7 +1414,8 @@ class IonConverterSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         val exception = the[IonConversionException] thrownBy {
           converter.parse(bigIntData)
         }
-        exception.getMessage should include("Error parsing field [column_a] of type [INT] into schema type [DecimalType(5,1)].")
+        exception.getMessage should include(
+          "Error parsing field [column_a] of type [INT] into schema type [DecimalType(5,1)].")
         exception.getMessage should include("NUMERIC_VALUE_OUT_OF_RANGE")
       }
 
@@ -1425,7 +1426,8 @@ class IonConverterSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         val exception = the[IonConversionException] thrownBy {
           converter.parse(largeFloatData)
         }
-        exception.getMessage should include("Error parsing field [column_a] of type [FLOAT] into schema type [DecimalType(5,1)].")
+        exception.getMessage should include(
+          "Error parsing field [column_a] of type [FLOAT] into schema type [DecimalType(5,1)].")
         exception.getMessage should include("NUMERIC_VALUE_OUT_OF_RANGE")
       }
 
@@ -1436,7 +1438,8 @@ class IonConverterSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         val exception = the[IonConversionException] thrownBy {
           converter.parse(largeDecimalData)
         }
-        exception.getMessage should include("Error parsing field [column_a] of type [DECIMAL] into schema type [DecimalType(5,1)].")
+        exception.getMessage should include(
+          "Error parsing field [column_a] of type [DECIMAL] into schema type [DecimalType(5,1)].")
         exception.getMessage should include("NUMERIC_VALUE_OUT_OF_RANGE")
       }
 
@@ -1447,7 +1450,8 @@ class IonConverterSpec extends AnyFreeSpec with Matchers with MockitoSugar with 
         val exception = the[IonConversionException] thrownBy {
           converter.parse(stringDataNumberLargeFloat)
         }
-        exception.getMessage should include("Error parsing field [column_a] of type [STRING] into schema type [DecimalType(5,1)].")
+        exception.getMessage should include(
+          "Error parsing field [column_a] of type [STRING] into schema type [DecimalType(5,1)].")
         exception.getMessage should include("NUMERIC_VALUE_OUT_OF_RANGE")
       }
 
