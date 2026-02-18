@@ -2,6 +2,16 @@
 
 This package provides an implementation of the Spark Data Sources V1 API, specficially the `FileFormat` interface, which understands how to read and write Ion data, serialized as both text and binary. See the [`IonFileFormat`] for the data source entry point.
 
+## Spark 4.0 Upgrade Notice
+
+This version targets **Apache Spark 4.0.1** with **Scala 2.13** and **Java 17**.
+
+**Known limitations:**
+- **Java 21+ is not supported.** Hadoop 3.4.1 (bundled with Spark 4.0.1) uses the removed `Subject.getSubject()` API which throws on Java 21+.
+- **Spark 3.x is not supported by this artifact.** Users on Spark 3.5.x should continue using `ion-spark-data-source-3.5_2.12`.
+- **Scala 2.12 is not supported.** Spark 4.0 requires Scala 2.13.
+- **ANSI mode is enabled by default in Spark 4.0.** Array out-of-bounds access now throws instead of returning null. Queries using direct array index access (e.g., `column[1]`) on arrays that may not have that index should use the `get()` SQL function instead.
+
 ## Usage
 
 ### From Scala
