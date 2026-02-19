@@ -195,7 +195,6 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 # Then run SBT commands as normal
 sbt compile
 ```
-```
 
 ### IDE Integration
 
