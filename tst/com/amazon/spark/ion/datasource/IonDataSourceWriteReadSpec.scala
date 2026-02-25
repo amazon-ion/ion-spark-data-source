@@ -572,8 +572,8 @@ class IonDataSourceWriteReadSpec extends AnyFlatSpec with Matchers with MockitoS
     dfRead.filter("region_id = 1").count shouldBe 1
     dfRead.filter("column_a = 3.23").count shouldBe 1
     dfRead.filter("column_b = cast(\"2020-09-30 00:00:00\" as Timestamp)").count shouldBe 1
-    dfRead.filter("column_c.column_c_2[1].column_c_2_1_1 = 'str12'").count shouldBe 1
-    dfRead.filter("column_c.column_c_2[1].column_c_2_1_2[1] = 22").count shouldBe 1
+    dfRead.filter("get(column_c.column_c_2, 1).column_c_2_1_1 = 'str12'").count shouldBe 1
+    dfRead.filter("get(get(column_c.column_c_2, 1).column_c_2_1_2, 1) = 22").count shouldBe 1
 
     cleanUpFolder(filePath)
   }
