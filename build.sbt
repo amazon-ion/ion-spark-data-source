@@ -1,6 +1,6 @@
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-val sparkVersion = "4.0.1"
+val sparkVersion = "4.1.1"
 val sparkMajorVersion = sparkVersion.substring(0, sparkVersion.lastIndexOf("."))
 
 organization := "com.amazon.ion"
