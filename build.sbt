@@ -71,12 +71,10 @@ publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 publishConfiguration := publishConfiguration.value.withOverwrite(true)
 pgpSigningKey := sys.env.get("PGP_SIGNING_KEY_ID")
 
-// NOTE: CI release escape hatch: If a release needs to be manually pushed to maven central,
-// specify the options below. Ensure the version is correct, and run `sbt ci-release` locally
-// with the same environment variables needed for the CI build. This will circumvent any 'SNAPSHOT'
-// detection, and issues with the sbt-ci-release plugin not pushing releases outside of a CI env.
-// isSnapshot := false
-// version := "1.0.0"
+// NOTE: manual release escape hatch: to push a release to Maven Central by hand, set/bump the
+// version in version.sbt (without a -SNAPSHOT suffix for a release), then run `sbt ci-release`
+// locally with the CI PGP/Sonatype environment variables. isSnapshot is derived in version.sbt,
+// so no other setting needs to be edited here.
 
 def releaseTasks(publishTask: String) = {
   val tasks = Seq(
