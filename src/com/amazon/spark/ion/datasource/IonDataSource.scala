@@ -13,23 +13,40 @@ import org.apache.spark.sql.types.StructType
 
 import java.io.InputStream
 
+import scala.util.control.NonFatal
+
 class IonDataSource(options: IonOptions, conf: Configuration, isExtractionRequired: Boolean) extends Serializable {
 
   def readFile(file: PartitionedFile, schema: StructType, converter: IonConverter): Iterator[InternalRow] = {
+    if (isExtractionRequired && options.recordBlobFieldName.isDefined) {
+      throw new IllegalStateException(
+        "IonFileFormat cannot read data using both column_path extraction and blob mode extraction")
+    }
+
     val path = new Path(file.filePath.toUri)
     val inputStream = CodecStreams.createInputStreamWithCloseResource(conf, path)
 
-    (isExtractionRequired, options.recordBlobFieldName) match {
-      case (true, Some(_)) =>
-        throw new IllegalStateException(
-          "IonFileFormat cannot read data using both column_path extraction and blob mode extraction")
-      case (true, None) =>
-        readFileWithColumnPathExtraction(schema, converter, inputStream)
-      case (false, Some(blobFieldName)) if schema.fields.exists(x => x.name == blobFieldName) =>
-        readFileWithBlobDataColumnExtraction(schema, converter, inputStream, blobFieldName)
-      case _ =>
-        converter.parse(inputStream)
-    }
+    // With ignoreCorruptFiles, FileScanRDD skips a file whose reader fails to initialize and never gets an
+    // iterator to close, so the stream must be closed here rather than at task end.
+    val rows =
+      try {
+        (isExtractionRequired, options.recordBlobFieldName) match {
+          case (true, _) =>
+            readFileWithColumnPathExtraction(schema, converter, inputStream)
+          case (false, Some(blobFieldName)) if schema.fields.exists(x => x.name == blobFieldName) =>
+            readFileWithBlobDataColumnExtraction(schema, converter, inputStream, blobFieldName)
+          case _ =>
+            converter.parse(inputStream)
+        }
+      } catch {
+        case NonFatal(e) =>
+          inputStream.close()
+          throw e
+      }
+
+    // FileScanRDD closes a Closeable iterator before opening the next file; the task completion listener
+    // registered above stays as the fallback for failed or cancelled tasks.
+    new CloseOnExhaustionIterator(rows, inputStream)
   }
 
   private def readFileWithColumnPathExtraction(schema: StructType,
